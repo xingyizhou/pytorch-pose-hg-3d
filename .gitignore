@@ -1,10 +1,5 @@
 *.DS_Store
 *.pth
-models/*
-data/h36m/*
-src/debug/*
-exp/*
-exp_old/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
