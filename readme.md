@@ -8,6 +8,8 @@ This repository is the PyTorch implementation for the network presented in:
 
 Checkout the original [torch implementation](https://github.com/xingyizhou/pose-hg-3d).
 
+Checkout the clean [2D hourglass network branch](https://github.com/xingyizhou/pytorch-pose-hg-3d/tree/2D).
+
 Contact: [zhouxy2017@gmail.com](mailto:zhouxy2017@gmail.com)
 
 ## Requirements
