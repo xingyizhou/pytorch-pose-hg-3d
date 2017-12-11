@@ -39,13 +39,13 @@ Our results of this stage is provided [here](https://drive.google.com/a/utexas.e
 
 - Stage2: Train without Geometry loss (drop LR at 25 epochs)
 ```
-python main-hg-3d.py -expID Stage2 -ratio3D 1 -regWeigh 0.1 -loadModel ../exp/Stage1/model_60.pth -nEpoch 30 -dropLR 25
+python main-hg-3d.py -expID Stage2 -ratio3D 1 -regWeigh 0.1 -loadModel ../exp/Stage1/model_60.pth -nEpochs 30 -dropLR 25
 ```
 
 - Stage3: Train with Geometry loss
 
 ```
-python main-hg-3d.py -expID Stage3 -ratio3D 1 -regWeigh 0.1 -varWeight 0.01 -loadModel ../exp/Stage2/model_30.pth -LR 2.5e-5 -nEpoch 10
+python main-hg-3d.py -expID Stage3 -ratio3D 1 -regWeigh 0.1 -varWeight 0.01 -loadModel ../exp/Stage2/model_30.pth -LR 2.5e-5 -nEpochs 10
 ```
 
 ## Citation
