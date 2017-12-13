@@ -51,7 +51,7 @@ def step(split, epoch, opt, dataLoader, model, criterion, optimizer = None):
       optimizer.step()
  
     Bar.suffix = '{split} Epoch: [{0}][{1}/{2}]| Total: {total:} | ETA: {eta:} | Loss {loss.avg:.6f} | Loss3D {loss3d.avg:.6f} | Acc {Acc.avg:.6f} | Mpjpe {Mpjpe.avg:.6f} ({Mpjpe.val:.6f})'.format(epoch, i, nIters, total=bar.elapsed_td, eta=bar.eta_td, loss=Loss, Acc=Acc, split = split, Mpjpe=Mpjpe, loss3d = Loss3D)
-    bar.next()
+    next(bar)
 
   bar.finish()
   return Loss.avg, Acc.avg, Mpjpe.avg, Loss3D.avg

@@ -1,3 +1,4 @@
+from __future__ import print_function
 import scipy.io as sio
 import numpy as np
 import h5py
@@ -33,12 +34,12 @@ for split in range(2):
       for subaction in subaction_list:
         for camera in camera_list:
           folder_name = 's_{:02d}_act_{:02d}_subact_{:02d}_ca_{:02d}'.format(subject, action, subaction, camera)
-          print folder_name
+          print(folder_name)
           annot_file = IMG_PATH + folder_name + '/' + annot_name
           try:
             data = sio.loadmat(annot_file)
           except:
-            print 'pass', folder_name
+            print('pass', folder_name)
             continue
           n = data['num_images'][0][0]
           meta_Y2d = data['Y2d'].reshape(17, 2, n)
@@ -60,7 +61,7 @@ for split in range(2):
             istrain.append(1 - split)
             num += 1
           
-print 'num = ', num
+print('num = ', num)
 h5name = SAVE_PATH + 'annotSampleTest.h5'
 f = h5py.File(h5name, 'w')
 f['id'] = id

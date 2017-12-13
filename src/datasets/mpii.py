@@ -1,3 +1,4 @@
+from __future__ import print_function
 import torch.utils.data as data
 import numpy as np
 import ref
@@ -9,7 +10,7 @@ from utils.img import Crop, DrawGaussian, Transform
 
 class MPII(data.Dataset):
   def __init__(self, opt, split, returnMeta = False):
-    print '==> initializing 2D {} data.'.format(split)
+    print('==> initializing 2D {} data.'.format(split))
     annot = {}
     tags = ['imgname','part','center','scale']
     f = File('{}/mpii/annot/{}.h5'.format(ref.dataDir, split), 'r')
@@ -17,7 +18,7 @@ class MPII(data.Dataset):
       annot[tag] = np.asarray(f[tag]).copy()
     f.close()
 
-    print 'Loaded 2D {} {} samples'.format(split, len(annot['scale']))
+    print('Loaded 2D {} {} samples'.format(split, len(annot['scale'])))
     
     self.split = split
     self.opt = opt
