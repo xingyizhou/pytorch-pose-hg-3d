@@ -15,14 +15,18 @@ except ImportError:
 
 class Logger(object):
     
-    def __init__(self, log_dir):
+    def __init__(self, save_dir, tm):
         """Create a summary writer logging to log_dir."""
+        log_dir = save_dir + '/logs_{}'.format(tm)
         if LOG:
           self.writer = tf.summary.FileWriter(log_dir)
-          self.f = open(log_dir + '/log.txt', 'w')
         else:
           os.mkdir(log_dir)
-          self.f = open(log_dir + '/log.txt', 'w')
+        self.f = open(log_dir + '/log.txt', 'w')
+        try:
+          os.system('cp {}/opt.txt {}/'.format(save_dir, log_dir))
+        except:
+          pass
     def write(self, txt):
         self.f.write(txt)
     

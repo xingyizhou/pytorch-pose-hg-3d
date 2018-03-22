@@ -1,5 +1,6 @@
 import numpy as np
 import ref
+from img import Transform
 
 def getPreds(hm):
   assert len(hm.shape) == 4, 'Input must be a 4-D tensor'
@@ -50,12 +51,10 @@ def Accuracy(output, target):
   else:
     return avgAcc / (len(ref.accIdxs) - badIdxCount)
 
-def MPJPE(output2D, output3D, meta):
-  meta = meta.numpy()
-  p = np.zeros((output2D.shape[0], ref.nJoints, 3))
-  p[:, :, :2] = getPreds(output2D).copy()
-  
-  hm = output2D.reshape(output2D.shape[0], output2D.shape[1], ref.outputRes, ref.outputRes)
+    
+def finalPreds(output, center, scale, rotate):
+  p = getPreds(output).copy()
+  hm = output.reshape(output.shape[0], output.shape[1], ref.outputRes, ref.outputRes)
   for i in range(hm.shape[0]):
     for j in range(hm.shape[1]):
       pX, pY = int(p[i, j, 0]), int(p[i, j, 1])
@@ -66,32 +65,12 @@ def MPJPE(output2D, output3D, meta):
         p[i, j, 0] = p[i, j, 0] + 0.25 * (1 if diffX >=0 else -1)
         p[i, j, 1] = p[i, j, 1] + 0.25 * (1 if diffY >=0 else -1)
   p = p + 0.5
-  
-  p[:, :, 2] = (output3D.copy() + 1) / 2 * ref.outputRes
-  h36mSumLen = 4296.99233013
-  root = 6
-  err = 0
-  num3D = 0
-  for i in range(p.shape[0]):
-    s = meta[i].sum()
-    if not (s > - ref.eps and s < ref.eps):
-      num3D += 1
-      lenPred = 0
-      for e in ref.edges:
-        lenPred += ((p[i, e[0]] - p[i, e[1]]) ** 2).sum() ** 0.5 
-      pRoot = p[i, root].copy()
-      for j in range(ref.nJoints):
-        p[i, j] = (p[i, j] - pRoot) / lenPred * h36mSumLen + meta[i, root]
-      p[i, 7] = (p[i, 6] + p[i, 8]) / 2
-      for j in range(ref.nJoints):
-        dis = ((p[i, j] - meta[i, j]) ** 2).sum() ** 0.5
-        err += dis / ref.nJoints
-  if num3D > 0:
-    return err / num3D, num3D
-  else:
-    return 0, 0
-    
 
+  preds = np.zeros((p.shape[0], p.shape[1], 2))
+  for i in range(p.shape[0]):
+    for j in range(p.shape[1]):
+      preds[i, j] = Transform(p[i, j], center[i], scale[i], rotate[i], ref.outputRes, invert = True)
+  return preds
   
   
 

@@ -8,7 +8,7 @@ from utils.utils import Rnd, Flip, ShuffleLR
 from utils.img import Crop, DrawGaussian, Transform
 
 class MPII(data.Dataset):
-  def __init__(self, opt, split, returnMeta = False):
+  def __init__(self, opt, split):
     print '==> initializing 2D {} data.'.format(split)
     annot = {}
     tags = ['imgname','part','center','scale']
@@ -22,7 +22,6 @@ class MPII(data.Dataset):
     self.split = split
     self.opt = opt
     self.annot = annot
-    self.returnMeta = returnMeta
   
   def LoadImage(self, index):
     path = '{}/{}'.format(ref.mpiiImgDir, self.annot['imgname'][index])
@@ -46,30 +45,22 @@ class MPII(data.Dataset):
       r = 0 if np.random.random() < 0.6 else Rnd(ref.rotate)
     inp = Crop(img, c, s, r, ref.inputRes) / 256.
     out = np.zeros((ref.nJoints, ref.outputRes, ref.outputRes))
-    Reg = np.zeros((ref.nJoints, 3))
     for i in range(ref.nJoints):
       if pts[i][0] > 1:
         pt = Transform(pts[i], c, s, r, ref.outputRes)
         out[i] = DrawGaussian(out[i], pt, ref.hmGauss) 
-        Reg[i, :2] = pt
-        Reg[i, 2] = 1
     if self.split == 'train':
       if np.random.random() < 0.5:
         inp = Flip(inp)
         out = ShuffleLR(Flip(out))
-        Reg[:, 1] = Reg[:, 1] * -1
-        Reg = ShuffleLR(Reg)
-      #print 'before', inp[0].max(), inp[0].mean()
       inp[0] = np.clip(inp[0] * (np.random.random() * (0.4) + 0.6), 0, 1)
       inp[1] = np.clip(inp[1] * (np.random.random() * (0.4) + 0.6), 0, 1)
       inp[2] = np.clip(inp[2] * (np.random.random() * (0.4) + 0.6), 0, 1)
-      #print 'after', inp[0].max(), inp[0].mean()
-      
-    inp = torch.from_numpy(inp)
-    if self.returnMeta:
-      return inp, out, Reg, np.zeros((ref.nJoints, 3))
+      meta = np.zeros(1)
     else:
-      return inp, out
+      meta = {'index' : index, 'center' : c, 'scale' : s, 'rotate': r}
+    
+    return inp, out, meta
     
   def __len__(self):
     return len(self.annot['scale'])

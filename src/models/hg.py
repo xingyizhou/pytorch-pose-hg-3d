@@ -1,7 +1,6 @@
 from .layers.Residual import Residual
 import torch.nn as nn
 import math
-import ref
 
 class Hourglass(nn.Module):
   def __init__(self, n, nModules, nFeats):
@@ -57,11 +56,13 @@ class Hourglass(nn.Module):
     return up1 + up2
 
 class HourglassNet(nn.Module):
-  def __init__(self, nStack, nModules, nFeats):
+  def __init__(self, nStack, nModules, nFeats, numOutput):
     super(HourglassNet, self).__init__()
     self.nStack = nStack
     self.nModules = nModules
     self.nFeats = nFeats
+    self.numOutput = numOutput
+    
     self.conv1_ = nn.Conv2d(3, 64, bias = True, kernel_size = 7, stride = 2, padding = 3)
     self.bn1 = nn.BatchNorm2d(64)
     self.relu = nn.ReLU(inplace = True)
@@ -78,10 +79,10 @@ class HourglassNet(nn.Module):
       lin = nn.Sequential(nn.Conv2d(self.nFeats, self.nFeats, bias = True, kernel_size = 1, stride = 1), 
                           nn.BatchNorm2d(self.nFeats), self.relu)
       _lin_.append(lin)
-      _tmpOut.append(nn.Conv2d(self.nFeats, ref.nJoints, bias = True, kernel_size = 1, stride = 1))
+      _tmpOut.append(nn.Conv2d(self.nFeats, self.numOutput, bias = True, kernel_size = 1, stride = 1))
       if i < self.nStack - 1:
         _ll_.append(nn.Conv2d(self.nFeats, self.nFeats, bias = True, kernel_size = 1, stride = 1))
-        _tmpOut_.append(nn.Conv2d(ref.nJoints, self.nFeats, bias = True, kernel_size = 1, stride = 1))
+        _tmpOut_.append(nn.Conv2d(self.numOutput, self.nFeats, bias = True, kernel_size = 1, stride = 1))
         
     self.hourglass = nn.ModuleList(_hourglass)
     self.Residual = nn.ModuleList(_Residual)

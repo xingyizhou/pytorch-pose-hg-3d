@@ -22,13 +22,14 @@ epsilon = 1e-8
 scale = 0.25
 rotate = 30
 hmGauss = 1
-hmGaussInp = 20
-shiftPX = 50
-disturb = 10
+#hmGaussInp = 20
+#shiftPX = 50
+#disturb = 10
 
-dataDir = '../data'
+rootDir = '/home/zxy/Projects/DataSelection/'
+dataDir = rootDir + 'data'
+expDir = rootDir + 'exp'
 mpiiImgDir = '/home/zxy/Datasets/mpii/images/'
 h36mImgDir = '/home/zxy/Datasets/Human3.6M/images/'
-expDir = '../exp'
 
-nThreads = 4
+nThreads = 2
