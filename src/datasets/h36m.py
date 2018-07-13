@@ -9,7 +9,7 @@ from utils.img import Crop, DrawGaussian, Transform3D
 
 class H36M(data.Dataset):
   def __init__(self, opt, split):
-    print '==> initializing 3D {} data.'.format(split)
+    print('==> initializing 3D {} data.').format(split)
     annot = {}
     tags = ['action', 'bbox', 'camera', 'id', 'joint_2d', 'joint_3d_mono', 'subaction', 'subject', 'istrain']
     f = File('../data/h36m/annotSampleTest.h5', 'r')
@@ -27,7 +27,7 @@ class H36M(data.Dataset):
     self.annot = annot
     self.nSamples = len(self.annot['id'])
     
-    print 'Loaded 3D {} {} samples'.format(split, len(self.annot['id']))
+    print('Loaded 3D {} {} samples').format(split, len(self.annot['id']))
   
   def LoadImage(self, index):
     folder = 's_{:02d}_act_{:02d}_subact_{:02d}_ca_{:02d}'.format(self.annot['subject'][index], self.annot['action'][index], \
