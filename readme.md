@@ -1,5 +1,7 @@
 # Towards 3D Human Pose Estimation in the Wild: a Weakly-supervised Approach
 
+Forked from Xingyi Zhou.Used for further research.
+
 This repository is the PyTorch implementation for the network presented in:
 
 > Xingyi Zhou, Qixing Huang, Xiao Sun, Xiangyang Xue, Yichen Wei, 

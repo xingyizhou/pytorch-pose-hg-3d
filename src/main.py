@@ -4,7 +4,7 @@ import datetime
 
 import torch
 import torch.utils.data
-from opts import opts
+import opts
 import ref
 from models.hg_3d import HourglassNet3D
 from utils.utils import adjust_learning_rate
@@ -15,7 +15,8 @@ from utils.logger import Logger
 from train import train, val
 
 def main():
-  opt = opts().parse()
+  # os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+  opt = opts.opts().parse()
   now = datetime.datetime.now()
   logger = Logger(opt.saveDir + '/logs_{}'.format(now.isoformat()))
 
@@ -33,7 +34,7 @@ def main():
 
   if opt.ratio3D < ref.eps:
     val_loader = torch.utils.data.DataLoader(
-        MPII(opt, 'val', returnMeta = True), 
+        MPII(opt, 'val', returnMeta = True),
         batch_size = 1, 
         shuffle = False,
         num_workers = int(ref.nThreads)

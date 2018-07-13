@@ -28,7 +28,7 @@ class FusionCriterion(Function):
     xy = target[:, :, :2]
     z = target[:, :, 2]
     batchSize = target.size(0)
-    output = torch.FloatTensor(1) * 0
+    output = torch.cuda.FloatTensor(1) * 0
     for t in range(batchSize):
       s = xy[t].sum()
       if s < ref.eps and s > - ref.eps: #Sup data
@@ -65,12 +65,12 @@ class FusionCriterion(Function):
     target = target.view(target.size(0), ref.nJoints, 3)
     xy = target[:, :, :2]
     z = target[:, :, 2]
-    grad_input = torch.zeros(input.size())
+    grad_input = torch.zeros(input.size()).cuda()
     batchSize = target.size(0)
     for t in range(batchSize):
       s = xy[t].sum()
       if s < ref.eps and s > - ref.eps:
-        grad_input[t] += grad_output[0] * self.regWeight / batchSize * 2 / ref.nJoints * (input[t] - z[t]).cpu()
+        grad_input[t] += grad_output[0] * self.regWeight / batchSize * 2 / ref.nJoints * (input[t] - z[t])#.cpu()
       else:
         xy[t] = 2.0 * xy[t] / ref.outputRes - 1
         for g in range(len(self.skeletonRef)):
@@ -91,8 +91,12 @@ class FusionCriterion(Function):
           for j in range(N):
             if l[j] > 0:
               id1, id2 = self.skeletonRef[g][j]
-              grad_input[t][id1] += 2 * self.varWeight * self.skeletonWeight[g][j] ** 2 / num * (l[j] - E) / l[j] * (input[t, id1] - input[t, id2]) / batchSize
-              grad_input[t][id2] += 2 * self.varWeight * self.skeletonWeight[g][j] ** 2 / num * (l[j] - E) / l[j] * (input[t, id2] - input[t, id1]) / batchSize
+              # tmp = (2 * self.varWeight * self.skeletonWeight[g][j] ** 2 / num * (l[j].float - E) / l[j] * (input[t, id1] - input[t, id2]) / batchSize).float()
+              # tmp2 = 2 * self.varWeight * self.skeletonWeight[g][j] ** 2 / num * (l[j].float - E) / l[j] * (input[t, id1] - input[t, id2]) / batchSize
+              # print("type1:{} type2:{}".format(tmp.dtype,tmp2.dtype))
+              grad_input[t][id1] += (2 * self.varWeight * self.skeletonWeight[g][j] ** 2 / num * (l[j] - E) / l[j] * (input[t, id1] - input[t, id2]) / batchSize).float().cuda()
+              # print(grad_input[t][id1].dtype)
+              grad_input[t][id2] += (2 * self.varWeight * self.skeletonWeight[g][j] ** 2 / num * (l[j] - E) / l[j] * (input[t, id2] - input[t, id1]) / batchSize).float().cuda()
     return grad_input.cuda(), None
     
     

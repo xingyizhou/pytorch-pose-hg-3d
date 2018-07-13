@@ -8,7 +8,7 @@ subject_list = [[1, 5, 6, 7, 8], [9, 11]]
 action_list = np.arange(2, 17)
 subaction_list = np.arange(1, 3)
 camera_list = np.arange(1, 5)
-IMG_PATH = '/home/zxy/Datasets/Human3.6M/images/'
+IMG_PATH = '/home/chr/datasets/hg-3d/images/'
 SAVE_PATH = '../../data/h36m/'
 annot_name = 'matlab_meta.mat'
 
@@ -33,18 +33,19 @@ for split in range(2):
       for subaction in subaction_list:
         for camera in camera_list:
           folder_name = 's_{:02d}_act_{:02d}_subact_{:02d}_ca_{:02d}'.format(subject, action, subaction, camera)
-          print folder_name
+          print(folder_name)
           annot_file = IMG_PATH + folder_name + '/' + annot_name
           try:
             data = sio.loadmat(annot_file)
           except:
-            print 'pass', folder_name
+            print('pass', folder_name)
             continue
           n = data['num_images'][0][0]
           meta_Y2d = data['Y2d'].reshape(17, 2, n)
           meta_Y3d_mono = data['Y3d_mono'].reshape(17, 3, n)
           bboxx = data['bbox'].transpose(1, 0)
-          for i in range(data['num_images']):
+          print(data['num_images'])
+          for i in range(data['num_images'][0][0]):
             if i % 5 != 0:
               continue
             if split == 1 and i % 200 != 0:
@@ -60,7 +61,7 @@ for split in range(2):
             istrain.append(1 - split)
             num += 1
           
-print 'num = ', num
+print('num = ', num)
 h5name = SAVE_PATH + 'annotSampleTest.h5'
 f = h5py.File(h5name, 'w')
 f['id'] = id

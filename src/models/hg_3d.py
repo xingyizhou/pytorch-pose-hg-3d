@@ -66,7 +66,7 @@ class HourglassNet3D(nn.Module):
     self.conv1_ = nn.Conv2d(3, 64, bias = True, kernel_size = 7, stride = 2, padding = 3)
     self.bn1 = nn.BatchNorm2d(64)
     self.relu = nn.ReLU(inplace = True)
-    self.r1 = Residual(64, 128)
+    self.r1 = Residual(64, int(128))
     self.maxpool = nn.MaxPool2d(kernel_size = 2, stride = 2)
     self.r4 = Residual(128, 128)
     self.r5 = Residual(128, self.nFeats)
