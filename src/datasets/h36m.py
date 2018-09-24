@@ -60,8 +60,6 @@ class H36M(data.Dataset):
   
       
   def __getitem__(self, index):
-    if self.split == 'train':
-      index = np.random.randint(self.nSamples)
     img = self.LoadImage(index)
     pts, c, s, pts_3d, pts_3d_mono = self.GetPartInfo(index)   
     pts_3d[7] = (pts_3d[12] + pts_3d[13]) / 2
