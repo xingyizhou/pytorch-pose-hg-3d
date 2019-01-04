@@ -1,5 +1,16 @@
+data/h36m/*
+legacy
+exp/*/*/events*
+*/events.out.tfevents*
+data/mpii/images
+data/COCO
+src/lib/paths.py
+preds/*
+*.mat
+*.checkpoint
 *.DS_Store
 *.pth
+*.mat
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -17,7 +28,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -52,7 +62,6 @@ coverage.xml
 *.pot
 
 # Django stuff:
-*.log
 local_settings.py
 
 # Flask stuff:
