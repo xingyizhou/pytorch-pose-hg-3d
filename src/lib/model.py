@@ -16,13 +16,14 @@ def create_model(opt):
     
   start_epoch = 1
   if opt.load_model != '':
-    checkpoint = torch.load(opt.load_model)
+    checkpoint = torch.load(
+      opt.load_model, map_location=lambda storage, loc: storage)
     print('loaded {}, epoch {}'.format(opt.load_model, checkpoint['epoch']))
     if type(checkpoint) == type({}):
       state_dict = checkpoint['state_dict']
     else:
       state_dict = checkpoint.state_dict()
-    model.load_state_dict(state_dict, strict=True)
+    model.load_state_dict(state_dict, strict=False)
     if opt.resume:
       print('resuming optimizer')
       optimizer.load_state_dict(checkpoint['optimizer'])
