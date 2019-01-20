@@ -32,7 +32,7 @@ def demo_image(image, model, opt):
       c, s, 0, [opt.input_w, opt.input_h])
   inp = cv2.warpAffine(image, trans_input, (opt.input_w, opt.input_h),
                          flags=cv2.INTER_LINEAR)
-  inp = (image / 255. - mean) / std
+  inp = (inp / 255. - mean) / std
   inp = inp.transpose(2, 0, 1)[np.newaxis, ...].astype(np.float32)
   inp = torch.from_numpy(inp).to(opt.device)
   out = model(inp)[-1]
@@ -70,7 +70,7 @@ def main(opt):
         image = cv2.imread(image_name)
         demo_image(image, model, opt)
   elif is_image(opt.demo):
-    print('Running {} ...'.format(image_name))
+    print('Running {} ...'.format(opt.demo))
     image = cv2.imread(opt.demo)
     demo_image(image, model, opt)
     
