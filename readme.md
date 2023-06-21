@@ -1,3 +1,6 @@
+# Existing Implementation  
+-----------
+
 # Towards 3D Human Pose Estimation in the Wild: a Weakly-supervised Approach
 
 This repository is the PyTorch implementation for the network presented in:
@@ -115,6 +118,65 @@ python main.py --exp_id fusion_3d --task human3d --dataset fusion_3d --ratio_3d 
 python main.py --exp_id fusion_3d_var --task human3d --dataset fusion_3d --ratio_3d 1 --weight_3d 0.1 --weight_var 0.01 --load_model ../models/fusion_3d.pth  --num_epoch 10 --lr 1e-4
 ```
 
+
+
+# Integrating the 3DPW Dataset
+______________________________
+
+## Downloading data:
+```
+https://virtualhumans.mpi-inf.mpg.de/3DPW/evaluation.html
+```
+
+## Structure of 3dpw dataset in the data folder
+```
+ |------3dpw
+        |------imageFiles
+               |-----courtyard_arguing_00
+               |     |-----image_0000_1.jpg, image_0000_1.jpg, etc.
+               |-----courtyard_backpacking_00
+               |     |-----image_0000_1.jpg, image_0000_1.jpg, etc.
+               |... etc
+        |------sequenceFiles
+               |-----train
+               |     |-----downtown_arguing_00.pkl, downtown_cafe_00.pkl, etc.
+               |-----test
+               |     |-----downtown_arguing_00.pkl, downtown_cafe_00.pkl, etc.
+               |-----validation
+               |     |-----downtown_arguing_00.pkl, downtown_cafe_00.pkl, etc.
+```
+## DEMO of existing model
+   ```
+   python demo.py --demo ../images --gpus -1 --load_model ../models/fusion_3d_var.pth
+   ```
+
+## Changes:
+1. Added threedpw.py script in src/lib/datasets
+2. Added the dataset in main.py, opts.py
+3. Train the model:
+   Change the current directory to src folder
+   ```
+   python main.py --exp_id threedpw
+   ```
+
+4. Run DEMO for 3dpw dataset
+   ```
+   python demo.py --demo ../data/3dpw/imageFiles --dataset threedpw --gpus -1 --load_model ../models/fusion_3d_var.pth
+   ```
+
+## Result Comparison
+
+#### Existing model i.e. mpii and h36m datasets
+<!images/ExistingResult.png>
+
+#### 3DPW dataset
+<!images/Newresult.png>
+
+## Conclusion
+The paper effectively uses convolutional neural networks for pose estimation. The inclusion of the 3DPW dataset not only allows the model to predict poses on a new dataset but also potentially improves the generalizability of the model. The results after integrating the 3DPW dataset were not initially accurate, which may be due to the necessity for further training, optimization, or potential issues with the dataset integration. Nonetheless, with a few minor changes and potential future improvements, the project demonstrates the application of deep learning for 2D and 3D pose estimation tasks.
+
+THANKYOU! 
+
 ## Citation
 
     @InProceedings{Zhou_2017_ICCV,
@@ -123,4 +185,14 @@ python main.py --exp_id fusion_3d_var --task human3d --dataset fusion_3d --ratio
     booktitle = {The IEEE International Conference on Computer Vision (ICCV)},
     month = {Oct},
     year = {2017}
+    }
+
+    3dpw dataset: https://virtualhumans.mpi-inf.mpg.de/3DPW/license.html
+    
+    @inproceedings{vonMarcard2018,
+    title = {Recovering Accurate 3D Human Pose in The Wild Using IMUs and a Moving Camera},
+    author = {von Marcard, Timo and Henschel, Roberto and Black, Michael and Rosenhahn, Bodo and Pons-Moll, Gerard},
+    booktitle = {European Conference on Computer Vision (ECCV)},
+    year = {2018},
+    month = {sep}
     }
